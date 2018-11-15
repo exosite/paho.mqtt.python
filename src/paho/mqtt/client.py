@@ -970,6 +970,7 @@ class Client(object):
             verify_host = not self._tls_insecure
             try:
                 # Try with server_hostname, even it's not supported in certain scenarios
+                self._ssl_context.set_alpn_protocols(['mqtt/3.1.1'])
                 sock = self._ssl_context.wrap_socket(
                     sock,
                     server_hostname=self._host,
@@ -980,6 +981,7 @@ class Client(object):
                 raise
             except ValueError:
                 # Python version requires SNI in order to handle server_hostname, but SNI is not available
+                self._ssl_context.set_alpn_protocols(['mqtt/3.1.1'])
                 sock = self._ssl_context.wrap_socket(
                     sock,
                     do_handshake_on_connect=False,
